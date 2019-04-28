@@ -1,5 +1,7 @@
 # Google-Cloud-NCAA-ML-Competition
-**37th place solution** for  Google Cloud &amp; NCAA® ML Competition in Kaggle
+**37th place solution** for  Google Cloud &amp; NCAA® ML Competition in Kaggle.
+
+[Google Cloud & NCAA® ML Competition 2019-Women's](https://www.kaggle.com/c/womens-machine-learning-competition-2019)
 
 
 ![rank](img/rank.png)
