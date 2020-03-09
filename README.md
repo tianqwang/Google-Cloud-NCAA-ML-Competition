@@ -15,9 +15,9 @@ I just try to write down all the timeline and procedures I followed in this jour
  - **Randomness**: The dataset to be predicted and evaluated is quite small. Although we are predicting 64*63 = 4032 matches, but there are only 63 matchs that would actually happen, which means any match would have big influence on the log-loss.
 
 ## Key Strategies
-- **Double the training data.** The first thing for this competition is to build the modeling framework based the given dataset. At first the data is structured in the unit of each game match, and got the feature based on two different teams. But we can actually build two records for each match, by setting away team as `Team_1`, home team as `Team_2`, or setting home team as `Team_1`, away team as `Team_2`, respectively.
+- **Double the training data.** The first thing for this competition is to build the modeling framework based on the given dataset. At first, the data is structured in the unit of each game match and got the feature based on two different teams. But we can actually build two records for each match, by setting away team as Team_1, the home team as Team_2, or setting home team as Team_1, away team as Team_2, respectively.
 
-- **Use two Stage model instead of one to optimize the target metric.** The evaluation metric is log-loss, which can be actually dirctly optimize by modeling, but there would be a problem for that: For one stage modeling, we can only build a classifier to optimize the log-loss, by setting predicted variable=0/1, but in this case, we actually lose much information in the ultimate scores. (For example, win with 80:79 would be the same as win with 80:40). So here I used two stage models:
+- **Use two Stage model instead of one to optimize the target metric.** The evaluation metric is log-loss, which can be directly optimized by modeling, but there would be a problem for that: For one stage modeling, we can only build a classifier to optimize the log-loss, by setting predicted variable=0/1, but in this case, we actually lose much information in the final scores. (For example, win with 80:79 would be the same as win with 80:40). So here I used two-stage models:
 
  1. Stage1: Using a regression model to predict the score difference between `Team_1` and `Team_2`.
  2. Stage2: Based on the predictions of score difference from stage1, get the probability of win rate in the past for those prediction levels, and use spline interpolation to smooth it.
@@ -35,7 +35,7 @@ def cauchyobj(preds, dtrain):
     return grad, hess
 ```
 
-- **Manually Setting Cases With Small Probability.** There are some cases with really small probability, but the model cannot tell to make a aggressive prediction based the past performance, so I manually change the prediction make the predictions more aggressive. For example, in the past ten years, only one case that team with seeds > 12 ever defeated teams with seeds < 5. So I believe it is a safe strategy to set the top seed with 100% percent win rate in those game matches.
+- **Manually Setting Cases With Small Probability.**  There are some cases with tiny probability, but the model cannot tell to make an aggressive prediction based the past performance, so I manually change the prediction to make the predictions more aggressive. For example, in the past ten years, only one case that team with seeds > 12 ever defeated teams with seeds < 5. So I believe it is a safe strategy to set the top seed with a 100% percent win rate in those game matches.
 
 
 ## Model
@@ -45,11 +45,11 @@ The model used in this competition is a single setting XGboost model, with diffe
 
 ## Things I learned from this competition:
 
-* Think the problem from a grand view, using different stategy to define target and built up modeling framework.
-* Optimizing the target through different ways, from model define to loss function design.
+* Think the problem from a grand view, using different strategies to define the target and built up modeling framework.
+* Optimizing the goal through various ways, from model identify to loss function design.
 * First try customized gradient function for tree boosting models.
-* Get more familiar with problem solving pipeline.
-* Experience on modeling small dataset with a lot randomness.
+* Get more familiar with problem-solving pipeline.
+* Experience in modeling small datasets with a lot of randomnesses.
 
 ## Things could have done better.
 
